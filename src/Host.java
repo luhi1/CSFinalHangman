@@ -2,20 +2,12 @@ import java.util.Scanner;
 
 public class Host extends Server {
     private String guess;
-    private String[] players;
-
     public Host(Server s){
         super();
         this.guess = "";
-        Game hostGame = s.createGame();
-        try {
-            gameService(hostGame);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
-    private void gameService(Game g) throws Exception{
+    public void startGame(Game g) throws Exception{
         if (this.guess.equals("home")){
             g.clearScreen();
             return;
@@ -25,6 +17,7 @@ public class Host extends Server {
         System.out.println("Type here: ");
         this.guess = guessReader.nextLine();
         g.checkGuess(guess);
-        gameService(g);
+        startGame(g);
+        guessReader.close();
     }
 }

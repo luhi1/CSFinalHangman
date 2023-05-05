@@ -1,9 +1,8 @@
 import java.util.Scanner;
 
-public class Host extends Server {
+public class Host{
     private String guess;
     public Host(Server s){
-        super();
         this.guess = "";
     }
 

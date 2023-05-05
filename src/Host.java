@@ -13,11 +13,14 @@ public class Host extends Server {
             return;
         }
         g.displayScreen();
+
         Scanner guessReader = new Scanner(System.in);
         System.out.println("Type here: ");
         this.guess = guessReader.nextLine();
+
         g.checkGuess(guess);
         startGame(g);
+        
         guessReader.close();
     }
 }

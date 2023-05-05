@@ -1,5 +1,6 @@
+import java.io.Serializable;
 
-public class Game {
+public class Game implements Serializable{
     private int numGuesses;
     private int strikes;
     private String hangman;
@@ -14,6 +15,7 @@ public class Game {
         this.hangman = "";
         this.guessString = "";
     }
+
     public Game(String word) throws Exception{
         this.secretWord = word;
         this.numGuesses = 0;
@@ -23,7 +25,6 @@ public class Game {
         for (int i = 0; i < secretWord.length(); ++i){
             this.guessString += "_ ";
         }
-        displayScreen();
     }
 
     public void displayScreen() throws Exception{

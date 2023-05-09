@@ -64,7 +64,7 @@ public class Game implements Serializable{
         }
     }
 
-    public void clearScreen() throws Exception{
+    public static void clearScreen() throws Exception{
         try {
             System.out.print("\033[H\033[2J");
             System.out.flush();

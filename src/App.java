@@ -1,7 +1,12 @@
+import java.util.Scanner;
+
 public class App {
     public static void main(String[] args) throws Exception {
-        Host myHost = new Host("127.0.0.1", 6666);
-        myHost.startGame();
-        myHost.stop();
+        Client user = new Client("127.0.0.1", 6666);
+        Scanner readUInput = new Scanner(System.in);
+        System.out.println("Type Here: ");
+        String uInput = readUInput.nextLine();
+        user.stop();
+        readUInput.close();
     }
 }

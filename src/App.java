@@ -6,6 +6,7 @@ public class App {
         Scanner readUInput = new Scanner(System.in);
         System.out.println("Type Here: ");
         String uInput = readUInput.nextLine();
+        user.sendMessage(uInput);
         user.stop();
         readUInput.close();
     }

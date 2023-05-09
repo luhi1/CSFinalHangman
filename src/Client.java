@@ -21,39 +21,29 @@ public class Client{
             messagesOut = new PrintWriter(clientSocket.getOutputStream(), true);
             messagesIn = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             this.ip = clientSocket.getInetAddress().getHostAddress();
-            connectToServer();
+            sendMessage("");
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void connectToServer(){
-        //Bruh, all the complicated socket multithreading shit works, but not the reading of a buffered reader into a string. What is life anymore!!!
-        try {
-            String fullResp = null;
-            do {
-                String resp = messagesIn.readLine ();
-                fullResp += resp;
-            } while (messagesIn.readLine() != null);
-            System.out.println(fullResp.toString());
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void getList(){
-            messagesOut.println("list");
+    public void sendMessage(String message){
+            messagesOut.println(message);
             try {
                 Game.clearScreen();
-                StringBuilder resp = new StringBuilder();
-                String line;
-                while( (line = messagesIn.readLine()) != null) {
-                    resp.append(line);
-                    resp.append("\n");
-                }
-                System.out.println(resp.toString());
+                    StringBuilder resp = new StringBuilder();
+                    String line;
+                    while( (line = messagesIn.readLine()) != null) {
+                        resp.append(line);
+                        resp.append("\n");
+                        if (resp.toString().contains("Type \"list\"")){
+                            break;
+                        }
+                    }
+                    System.out.println(resp.toString());
+    
+                
             } catch (Exception e) {
                 e.printStackTrace();
             }

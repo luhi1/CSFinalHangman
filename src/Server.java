@@ -27,6 +27,8 @@ public class Server{
     private ArrayList<String> hostIPs;
     
     public Server(int port) {
+        this.clientIPs = new ArrayList<String>();
+        this.hostIPs = new ArrayList<String>();
         try {
             serverSocket = new ServerSocket(port);
         } catch (IOException e) {
@@ -71,12 +73,17 @@ public class Server{
                         messagesIn = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
                         messagesOut.println("Welcome to the rodeo! \n Type \"list\" to view the list of games, type \"quit\" to exit, or type \"host\" to host a game!");
-                        String hostClientRequests = messagesIn.readLine();
-                        while (!hostClientRequests.contains("Join: ") || !hostClientRequests.equals("quit")){
+                        String hostClientRequests = messagesIn.readLine(); 
+                        
+                        while (hostClientRequests == null || (!hostClientRequests.contains("Join: ") || !hostClientRequests.equals("quit"))){
+                                if (hostClientRequests == null){
+                                        hostClientRequests = messagesIn.readLine(); 
+                                        continue;
+                                }
                                 switch (hostClientRequests){
                                         case ("list"):
                                                 clientIPs.add(clientIP);
-                                                System.out.println("List of hosts you could join: WIP");
+                                                messagesOut.println("List of hosts you could join: WIP");
                                                 //Print out list of hosts.
                                         case ("host"):
                                                 hostIPs.add(clientIPs.remove(clientIPs.indexOf(clientIP)));
@@ -86,7 +93,6 @@ public class Server{
                                 }
                         }
                         clientIPs.remove(clientIP);
-                        clientSocket.close();
                         messagesIn.close();
                         messagesOut.close();        
                 } catch (Exception e) {

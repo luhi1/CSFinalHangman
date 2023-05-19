@@ -21,9 +21,6 @@ private ObjectOutputStream gameOut;
                 return chain;
         }
 
-        public void getWinOrLoss(){
-
-        }
         public void resetChain() {
                 this.chain = 0;
         }

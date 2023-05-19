@@ -10,7 +10,10 @@ public class App {
 
 
         do {
-            System.out.println("Type \"chain\" to play another game (and keep your current win ;) ) or type \"leaderboard\" to see who has the highest chain wins!");
+            System.out.println("If you quit out of the game, whatever chain you had going is lost!!!");
+            System.out.println("No, you cannot recover the chain, and don't ask me to try and do that for you!");
+            System.out.println("If you fail and attemp to start a new chain, your old one will be overwritten.");
+            System.out.println("Type \"chain\" to play another game or type \"leaderboard\" to see who has the highest chain wins!");
             System.out.println("Type \"quit\" to call it a day!");
             do {
                 menuChoice = menuReader.nextLine();
@@ -30,7 +33,7 @@ public class App {
                         while (myHost.getInputStream().readLine() == null){
                                 System.out.println("Waiting for game to start");
                         }
-                        myHost.startGame();
+                        winOrLoss = myHost.startGame();
                         break;
                 case ("leaderboard"):
                         myHost.sendMessage("leaderboard");
@@ -64,6 +67,7 @@ public class App {
                         }
                         break;
                 default:
+                        menuChoice = "quit";
                         break;
             }
             

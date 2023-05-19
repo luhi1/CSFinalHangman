@@ -10,17 +10,47 @@ import java.net.Socket;
 public class Host{
     private String guess;
     private Socket clientSocket;
-    private ObjectOutputStream gameOut;
+
+private ObjectOutputStream gameOut;
     private ObjectInputStream gameIn;
     private PrintWriter messagesOut;
     private BufferedReader messagesIn;
+    private int chain;
     
-    public Host(){
+        public int getChain() {
+                return chain;
+        }
+
+        public void getWinOrLoss(){
+
+        }
+        public void resetChain() {
+                this.chain = 0;
+        }
+
+        public void incrementChain() {
+                this.chain++;
+        }
+
+        public void sendMessage(String m){
+                messagesOut.println(m);
+        }
+
+        public BufferedReader getInputStream(){
+                return messagesIn;
+        }
+
+        public Socket getClientSocket() {
+                return clientSocket;
+        }
+
+public Host(){
         this.guess = "";
     }
     
     public Host(String serverIP, int serverPort){
         this.guess = "";
+        chain = 0;
         connect(serverIP, serverPort);
     }
     
@@ -39,45 +69,34 @@ public class Host{
 
     }
 
-    public void startGame(){
+    public boolean startGame(){
             messagesOut.println("newGame");
             //Println = send the message, scanner reading is just like user input!
             Game resp;
             try {
                     resp = (Game) gameIn.readObject();
-                    this.currentGame(resp);
+                    return this.currentGame(resp);
             } catch (Exception e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
             }
+            return false;
     }
 
-    public void stop(){
-        try {
-                gameIn.close();
-                gameOut.close();
-                messagesIn.close();
-                messagesOut.close();
-                clientSocket.close();
-        } catch (IOException e) {
-                e.printStackTrace();
-        }
-}
-
-    public void currentGame(Game g) throws Exception{
+    public boolean currentGame(Game g) throws Exception{
         if (this.guess.equals("home")){
-            g.clearScreen();
-            return;
+                this.guess = "";
+                Game.clearScreen();
+                return g.getWinOrLoss();
         }
         g.displayScreen();
 
         Scanner guessReader = new Scanner(System.in);
         System.out.println("Type here: ");
         this.guess = guessReader.nextLine();
-
         g.checkGuess(guess);
         currentGame(g);
         
-        guessReader.close();
+        return g.getWinOrLoss();
     }
 }

@@ -7,6 +7,11 @@ public class Game implements Serializable{
     public static String[] hangmanParts = {"  O", "-----", "/|||\\", " / \\", "  X"};
     private String guessString;
     private String secretWord;
+    private boolean winOrLoss;
+
+    public boolean getWinOrLoss() {
+        return winOrLoss;
+    }
 
     public Game(){
         this.secretWord = "";
@@ -28,9 +33,10 @@ public class Game implements Serializable{
     }
 
     public void displayScreen() throws Exception{
-        clearScreen();
+        Game.clearScreen();
         hangman = "";
         if (strikes == 5){
+            winOrLoss = false;
             System.out.println("You lost! The hangman got buried.");
             for (int i = this.strikes-1; i >= 0; i--){
                 hangman += "\n              "+hangmanParts[i];
@@ -45,6 +51,7 @@ public class Game implements Serializable{
             spacedSecret += secretWord.charAt(i) + " ";
         }
         if (spacedSecret.equals(guessString)){
+            winOrLoss = true;
             System.out.println("GG You Won!");
             System.out.println("Type \"home\" to return to the menu.");
             return;
@@ -64,7 +71,7 @@ public class Game implements Serializable{
         }
     }
 
-    public void clearScreen() throws Exception{
+    public static void clearScreen() throws Exception{
         try {
             System.out.print("\033[H\033[2J");
             System.out.flush();

@@ -1,8 +1,10 @@
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -18,7 +20,7 @@ public class Server extends Thread{
     private ObjectInputStream gameIn;
     private PrintWriter messagesOut;
     private BufferedReader messagesIn;
-    private Game currentGame;
+    private String secretWord;
     private ArrayList<String> leaderboardIPs;
     private ArrayList<Integer> leaderboardScores;
     //This could be a hashmap or dictionary, but I want the arraylist point :)
@@ -31,7 +33,7 @@ public class Server extends Thread{
             gameIn = null;
             messagesIn = null;
             messagesOut = null;
-            currentGame = new Game("alzheimers");
+            this.secretWord = "alzheimers";
             leaderboardIPs = new ArrayList<String>();
             leaderboardScores = new ArrayList<Integer>();
             System.out.println("All instance variables initialized");
@@ -58,11 +60,13 @@ public class Server extends Thread{
 
     private class ServerHostHandler extends Thread{
         public ServerHostHandler() throws IOException{
-                gameOut = new ObjectOutputStream(clientSocket.getOutputStream());
-                gameIn = new ObjectInputStream(clientSocket.getInputStream());
+                OutputStream outputStream = clientSocket.getOutputStream();
+                InputStream InputStream = clientSocket.getInputStream();
+                gameOut = new ObjectOutputStream(outputStream);
+                gameIn = new ObjectInputStream(InputStream);
 
-                messagesOut = new PrintWriter(clientSocket.getOutputStream(), true);
-                messagesIn = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                messagesOut = new PrintWriter(outputStream, true);
+                messagesIn = new BufferedReader(new InputStreamReader(InputStream));
         }
 
         public void run(){
@@ -79,7 +83,7 @@ public class Server extends Thread{
 
                                 switch (hostClientRequests){
                                         case ("newGame"):
-                                                gameOut.writeObject(currentGame);
+                                                gameOut.writeObject(new Game(secretWord));
                                                 break;
                                         case ("leaderboard"):
                                                 if (leaderboardScores.size() > 0){
@@ -118,6 +122,7 @@ public class Server extends Thread{
                                         messagesOut.println("oneMore");
                                 }
                                 hostClientRequests = null;
+                                messagesOut.flush();
                 
                         } while (hostClientRequests == null || !hostClientRequests.equals("quit"));
                 } catch (Exception e) {
@@ -129,8 +134,6 @@ public class Server extends Thread{
         
         public void closeInputsAndOutputs(){
                 try {
-                        gameIn.close();
-                        gameOut.close();
                         messagesIn.close();
                         messagesOut.close();
                         clientSocket.close();
@@ -145,15 +148,10 @@ public class Server extends Thread{
                 System.out.println("Spawner set up.");
         }
 
-        private void createGame() throws Exception{
-                String secretWord = randWords[(int) (Math.random()*randWords.length)];
-                currentGame = new Game(secretWord);
-        }
-
         public void run(){
                 try {
                         while (true){
-                                createGame();
+                                secretWord = randWords[(int) (Math.random()*randWords.length)];
                                 Thread.sleep(3000);
                         }
 

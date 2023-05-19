@@ -1,9 +1,12 @@
 import java.util.Scanner;
+
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 
@@ -54,18 +57,21 @@ public class Host{
     public void connect(String ip, int port){
         try {
                 clientSocket = new Socket(ip, port);
-                gameOut = new ObjectOutputStream(clientSocket.getOutputStream());
-                gameIn = new ObjectInputStream(clientSocket.getInputStream());
 
-                messagesOut = new PrintWriter(clientSocket.getOutputStream(), true);
-                messagesIn = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                OutputStream outputStream = clientSocket.getOutputStream();
+                InputStream InputStream = clientSocket.getInputStream();
+                gameOut = new ObjectOutputStream(outputStream);
+                gameIn = new ObjectInputStream(InputStream);
+
+                messagesOut = new PrintWriter(outputStream, true);
+                messagesIn = new BufferedReader(new InputStreamReader(InputStream));
         } catch (IOException e) {
                 e.printStackTrace();
         }
 
     }
 
-    public boolean startGame(){
+    public boolean startGame() throws IOException{
         messagesOut.println("newGame");
         //Println = send the message, scanner reading is just like user input!
         Game resp;

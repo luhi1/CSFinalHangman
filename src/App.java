@@ -2,7 +2,6 @@ import java.util.Scanner;
 
 public class App {
     public static void main(String[] args) throws Exception {
-        //TODO Change to school computer IP
         Host myHost = new Host("10.129.210.117", 6666);
         Boolean winOrLoss = myHost.startGame();
         String menuChoice = "";
@@ -13,6 +12,7 @@ public class App {
             System.out.println("If you quit out of the game, whatever chain you had going is lost!!!");
             System.out.println("No, you cannot recover the chain, and don't ask me to try and do that for you!");
             System.out.println("If you fail and attemp to start a new chain, your old one will be overwritten.");
+            System.out.println("--------------------------------------------");
             System.out.println("Type \"chain\" to play another game or type \"leaderboard\" to see who has the highest chain wins!");
             System.out.println("Type \"quit\" to call it a day!");
             do {
@@ -30,9 +30,7 @@ public class App {
                                 myHost.resetChain();
                         }
                         myHost.sendMessage(myHost.getClientSocket().getInetAddress().getHostAddress()+":"+ myHost.getChain());
-                        while (myHost.getInputStream().readLine() == null){
-                                System.out.println("Waiting for game to start");
-                        }
+                        Thread.sleep(100);
                         winOrLoss = myHost.startGame();
                         break;
                 case ("leaderboard"):
@@ -45,7 +43,7 @@ public class App {
                         try {
                                 StringBuilder resp = new StringBuilder();
                                 String line;
-                                resp.append("Start Leaderboard");
+                                resp.append("Current leader.");
                                 resp.append("\n");
                                 while( (line = myHost.getInputStream().readLine()) != null) {
                                         if (line.contains(terminator)){

@@ -1,6 +1,6 @@
 import java.io.Serializable;
 
-public class Game implements Serializable{
+public class Game implements Serializable, Cloneable{
     private int numGuesses;
     private int strikes;
     private String hangman;
@@ -11,6 +11,11 @@ public class Game implements Serializable{
 
     public boolean getWinOrLoss() {
         return winOrLoss;
+    }
+
+    protected Object clone() throws CloneNotSupportedException {
+
+        return super.clone();
     }
 
     public Game(){
@@ -31,7 +36,6 @@ public class Game implements Serializable{
             this.guessString += "_ ";
         }
     }
-
     public void displayScreen() throws Exception{
         Game.clearScreen();
         hangman = "";
